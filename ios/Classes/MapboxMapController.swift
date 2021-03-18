@@ -70,6 +70,11 @@ class MapboxMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, Ma
             }
         }
     }
+    func removeAllForController(controller: MGLAnnotationController, ids: [String]){
+        let idSet = Set(ids)
+        let annotations = controller.styleAnnotations()
+        controller.removeStyleAnnotations(annotations.filter { idSet.contains($0.identifier) })
+    }
     
     func onMethodCall(methodCall: FlutterMethodCall, result: @escaping FlutterResult) {
         switch(methodCall.method) {
@@ -257,16 +262,11 @@ class MapboxMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, Ma
         case "symbols#removeAll":
             guard let symbolAnnotationController = symbolAnnotationController else { return }
             guard let arguments = methodCall.arguments as? [String: Any] else { return }
-            guard let symbolIds = arguments["symbols"] as? [String] else { return }
-            var symbols: [MGLSymbolStyleAnnotation] = [];
+            guard let symbolIds = arguments["ids"] as? [String] else { return }
 
-            for symbol in symbolAnnotationController.styleAnnotations(){
-                if symbolIds.contains(symbol.identifier) {
-                    symbols.append(symbol as! MGLSymbolStyleAnnotation)
-                }
-            }
-            symbolAnnotationController.removeStyleAnnotations(symbols)
+            removeAllForController(controller:symbolAnnotationController, ids:symbolIds)
             result(nil)
+
         case "symbol#getGeometry":
             guard let symbolAnnotationController = symbolAnnotationController else { return }
             guard let arguments = methodCall.arguments as? [String: Any] else { return }
@@ -321,6 +321,34 @@ class MapboxMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, Ma
             } else {
                 result(nil)
             }
+
+        case "circle#addAll":
+            guard let circleAnnotationController = circleAnnotationController else { return }
+            guard let arguments = methodCall.arguments as? [String: Any] else { return }
+            // Parse geometry
+            var identifier: String? = nil
+            if let allOptions = arguments["options"] as? [[String: Any]]{
+                var circles: [MGLCircleStyleAnnotation] = [];
+
+                for options in allOptions {
+                    if let geometry = options["geometry"] as? [Double] {
+                        guard geometry.count > 0 else { break }
+
+                        let coordinate = CLLocationCoordinate2DMake(geometry[0], geometry[1])
+                        let circle = MGLCircleStyleAnnotation(center: coordinate)
+                        Convert.interpretCircleOptions(options: options, delegate: circle)
+                        circles.append(circle)
+                    }
+                }
+                if !circles.isEmpty {
+                    circleAnnotationController.addStyleAnnotations(circles)
+                }
+                result(circles.map { $0.identifier })
+            }
+            else {
+                result(nil)
+            }
+  
         case "circle#update":
             guard let circleAnnotationController = circleAnnotationController else { return }
             guard let arguments = methodCall.arguments as? [String: Any] else { return }
@@ -346,6 +374,16 @@ class MapboxMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, Ma
                 }
             }
             result(nil)
+
+        case "circle#removeAll":
+            guard let circleAnnotationController = circleAnnotationController else { return }
+            guard let arguments = methodCall.arguments as? [String: Any] else { return }
+            guard let ids = arguments["ids"] as? [String] else { return }
+
+            removeAllForController(controller:circleAnnotationController, ids:ids)
+            result(nil)
+
+        
         case "line#add":
             guard let lineAnnotationController = lineAnnotationController else { return }
             guard let arguments = methodCall.arguments as? [String: Any] else { return }
@@ -364,6 +402,38 @@ class MapboxMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, Ma
             } else {
                 result(nil)
             }
+        
+        case "line#addAll":
+            guard let lineAnnotationController = lineAnnotationController else { return }
+            guard let arguments = methodCall.arguments as? [String: Any] else { return }
+            // Parse geometry
+            var identifier: String? = nil
+            if let allOptions = arguments["options"] as? [[String: Any]]{
+                var lines: [MGLLineStyleAnnotation] = [];
+
+                for options in allOptions {
+                    if let geometry = options["geometry"] as? [[Double]] {
+                        guard geometry.count > 0 else { break }
+                        // Convert geometry to coordinate and create a line.
+                        var lineCoordinates: [CLLocationCoordinate2D] = []
+                        for coordinate in geometry {
+                            lineCoordinates.append(CLLocationCoordinate2DMake(coordinate[0], coordinate[1]))
+                        }
+                        let line = MGLLineStyleAnnotation(coordinates: lineCoordinates, count: UInt(lineCoordinates.count))
+                        Convert.interpretLineOptions(options: options, delegate: line)
+                        lines.append(line)
+                    }
+                }
+                if !lines.isEmpty {
+                    lineAnnotationController.addStyleAnnotations(lines)
+                }
+                result(lines.map { $0.identifier })
+            }
+            else {
+                result(nil)
+            }
+  
+
         case "line#update":
             guard let lineAnnotationController = lineAnnotationController else { return }
             guard let arguments = methodCall.arguments as? [String: Any] else { return }
@@ -389,6 +459,15 @@ class MapboxMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, Ma
                 }
             }
             result(nil)
+
+        case "line#removeAll":
+            guard let lineAnnotationController = lineAnnotationController else { return }
+            guard let arguments = methodCall.arguments as? [String: Any] else { return }
+            guard let ids = arguments["ids"] as? [String] else { return }
+
+            removeAllForController(controller:lineAnnotationController, ids:ids)
+            result(nil)
+
         case "line#getGeometry":
             guard let lineAnnotationController = lineAnnotationController else { return }
             guard let arguments = methodCall.arguments as? [String: Any] else { return }
@@ -424,7 +503,40 @@ class MapboxMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, Ma
                 fillAnnotationController.addStyleAnnotation(fill)
                 identifier = fill.identifier
             }
+
             result(identifier)
+
+        case "fill#addAll":
+            guard let fillAnnotationController = fillAnnotationController else { return }
+            guard let arguments = methodCall.arguments as? [String: Any] else { return }
+            // Parse geometry
+            var identifier: String? = nil
+            if let allOptions = arguments["options"] as? [[String: Any]]{
+                var fills: [MGLPolygonStyleAnnotation] = [];
+
+                for options in allOptions{
+                    if let geometry = options["geometry"] as? [[[Double]]] {
+                        guard geometry.count > 0 else { break }
+                        // Convert geometry to coordinate and interior polygonc.
+                        var fillCoordinates: [CLLocationCoordinate2D] = []
+                        for coordinate in geometry[0] {
+                            fillCoordinates.append(CLLocationCoordinate2DMake(coordinate[0], coordinate[1]))
+                        }
+                        let polygons = Convert.toPolygons(geometry: geometry.tail)
+                        let fill = MGLPolygonStyleAnnotation(coordinates: fillCoordinates, count: UInt(fillCoordinates.count), interiorPolygons: polygons)
+                        Convert.interpretFillOptions(options: options, delegate: fill)
+                        fills.append(fill)
+                    }
+                }
+                if !fills.isEmpty {
+                    fillAnnotationController.addStyleAnnotations(fills)
+                }
+                result(fills.map { $0.identifier })
+            }
+            else {
+                result(nil)
+            }
+
         case "fill#update":
             guard let fillAnnotationController = fillAnnotationController else { return }
             guard let arguments = methodCall.arguments as? [String: Any] else { return }
@@ -437,6 +549,7 @@ class MapboxMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, Ma
                     break;
                 }
             }
+            
             result(nil)
         case "fill#remove":
             guard let fillAnnotationController = fillAnnotationController else { return }
@@ -450,6 +563,15 @@ class MapboxMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, Ma
                 }
             }
             result(nil)
+
+        case "fill#removeAll":
+            guard let fillAnnotationController = fillAnnotationController else { return }
+            guard let arguments = methodCall.arguments as? [String: Any] else { return }
+            guard let ids = arguments["ids"] as? [String] else { return }
+
+            removeAllForController(controller:fillAnnotationController, ids:ids)
+            result(nil)
+
         case "style#addImage":
             guard let arguments = methodCall.arguments as? [String: Any] else { return }
             guard let name = arguments["name"] as? String else { return }
@@ -464,6 +586,8 @@ class MapboxMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, Ma
                 self.mapView.style?.setImage(image, forName: name)
             }
             result(nil)
+
+            
         case "style#addImageSource":
             guard let arguments = methodCall.arguments as? [String: Any] else { return }
             guard let imageSourceId = arguments["imageSourceId"] as? String else { return }
@@ -547,6 +671,7 @@ class MapboxMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, Ma
         default:
             result(FlutterMethodNotImplemented)
         }
+        NSLog("methodCall.method")
     }
     
     private func getSymbolForOptions(options: [String: Any]) -> MGLSymbolStyleAnnotation? {
