@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:mapbox_gl_example/full_map.dart';
 import 'package:mapbox_gl_example/offline_regions.dart';
+import 'package:mapbox_gl_example/place_batch.dart';
 
 import 'animate_camera.dart';
 import 'annotation_order_maps.dart';
@@ -36,6 +37,7 @@ final List<ExamplePage> _allPages = <ExamplePage>[
   ScrollingMapPage(),
   OfflineRegionsPage(),
   AnnotationOrderPage(),
+  BatchAddPage(),
 ];
 
 class MapsDemo extends StatelessWidget {
