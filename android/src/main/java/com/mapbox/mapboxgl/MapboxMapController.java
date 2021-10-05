@@ -397,8 +397,8 @@ final class MapboxMapController
     if (circleManager == null) {
       circleManager = new CircleManager(mapView, mapboxMap, style);
       circleManager.addClickListener(MapboxMapController.this::onAnnotationClick);
-    }
   }
+ }
 
   private void enableFillManager(@NonNull Style style) {
     if (fillManager ==  null) {
@@ -666,13 +666,17 @@ final class MapboxMapController
       }
       case "symbolManager#iconAllowOverlap": {
         final Boolean value = call.argument("iconAllowOverlap");
-        symbolManager.setIconAllowOverlap(value);
+        if(symbolManager != null){
+          symbolManager.setIconAllowOverlap(value);
+        }
         result.success(null);
         break;
       }
       case "symbolManager#iconIgnorePlacement": {
         final Boolean value = call.argument("iconIgnorePlacement");
-        symbolManager.setIconIgnorePlacement(value);
+        if(symbolManager != null){
+          symbolManager.setIconIgnorePlacement(value);
+        }
         result.success(null);
         break;
       }
@@ -720,7 +724,7 @@ final class MapboxMapController
             for (Line line : newLines) {
               id = String.valueOf(line.getId());
               newIds.add(id);
-              lines.put(id, new LineController(line, true, this));
+              lines.put(id, new LineController(line, annotationConsumeTapEvents.contains("AnnotationType.line"), this));
             }
           }
         }
@@ -792,7 +796,7 @@ final class MapboxMapController
             for (Circle circle : newCircles) {
               id = String.valueOf(circle.getId());
               newIds.add(id);
-              circles.put(id, new CircleController(circle, true, this));
+              circles.put(id, new CircleController(circle, annotationConsumeTapEvents.contains("AnnotationType.circle"), this));
             }
           }
         }
@@ -868,7 +872,7 @@ final class MapboxMapController
             for (Fill fill : newFills) {
               id = String.valueOf(fill.getId());
               newIds.add(id);
-              fills.put(id, new FillController(fill, true, this));
+              fills.put(id, new FillController(fill, annotationConsumeTapEvents.contains("AnnotationType.fill"), this));
             }
           }
         }
