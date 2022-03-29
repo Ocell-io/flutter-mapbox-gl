@@ -94,8 +94,12 @@ class MapboxWebGlPlatform extends MapboxGlPlatform
 
   void _loadFromAssets(Event event) async {
     final imagePath = event.id;
-    final ByteData bytes = await rootBundle.load(imagePath);
-    await addImage(imagePath, bytes.buffer.asUint8List());
+    try {
+      final ByteData bytes = await rootBundle.load(imagePath);
+      await addImage(imagePath, bytes.buffer.asUint8List());
+    } catch (e) {
+      print("Could not find asset $imagePath");
+    }
   }
 
   _onMouseDown(Event e) {
