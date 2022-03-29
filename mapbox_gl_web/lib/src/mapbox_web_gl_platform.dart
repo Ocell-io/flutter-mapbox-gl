@@ -83,7 +83,7 @@ class MapboxWebGlPlatform extends MapboxGlPlatform
       _map.on('move', _onCameraMove);
       _map.on('moveend', _onCameraIdle);
       _map.on('resize', _onMapResize);
-      _map.on('styleimagemissing', _loadFromAssets);
+      // _map.on('styleimagemissing', _loadFromAssets);
       if (_dragEnabled) {
         _map.on('mouseup', _onMouseUp);
         _map.on('mousemove', _onMouseMove);
