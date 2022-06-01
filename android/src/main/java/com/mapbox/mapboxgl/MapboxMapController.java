@@ -1378,7 +1378,7 @@ final class MapboxMapController
     if (disposed) {
       return;
     }
-    mapView.onPause();
+    mapView.onResume();
   }
 
   @Override
