@@ -1,7 +1,7 @@
 part of mapbox_gl_web;
 
 const _mapboxGlCssUrl =
-    'https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.css';
+    'https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.css';
 
 class MapboxWebGlPlatform extends MapboxGlPlatform
     implements MapboxMapOptionsSink {
@@ -91,23 +91,8 @@ class MapboxWebGlPlatform extends MapboxGlPlatform
         _map.on('mouseup', _onMouseUp);
         _map.on('mousemove', _onMouseMove);
       }
-
-      _initResizeObserver();
     }
     Convert.interpretMapboxMapOptions(_creationParams['options'], this);
-  }
-
-  void _initResizeObserver() {
-    final resizeObserver = ResizeObserver((entries, observer) {
-      // The resize observer might be called a lot of times when the user resizes the browser window with the mouse for example.
-      // Due to the fact that the resize call is quite expensive it should not be called for every triggered event but only the last one, like "onMoveEnd".
-      // But because there is no event type for the end, there is only the option to spawn timers and cancel the previous ones if they get overwritten by a new event.
-      lastResizeObserverTimer?.cancel();
-      lastResizeObserverTimer = Timer(Duration(milliseconds: 50), () {
-        _onMapResize();
-      });
-    });
-    resizeObserver.observe(document.body as Element);
   }
 
   void _loadFromAssets(Event event) async {
