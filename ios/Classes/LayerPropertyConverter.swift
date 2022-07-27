@@ -397,14 +397,21 @@ class LayerPropertyConverter {
             }
             // this is required because NSExpression.init(mglJSONObject: json) fails to create
             // a proper Expression if the data of a literal is an array
-            if let offset = json as? [Any] {
-                if offset.count == 2, offset.first is String, offset.first as? String == "literal" {
-                    if let vector = offset.last as? [Any] {
+            if let array = json as? [Any] {
+                if array.count >= 2, array.first is String, array.first as? String == "literal" {
+                    if let vector = array.last as? [Any] {
                         if vector.count == 2 {
                             if let x = vector.first as? Double, let y = vector.last as? Double {
                                 return NSExpression(
                                     forConstantValue: NSValue(cgVector: CGVector(dx: x,
                                                                                  dy: y))
+                                )
+                            }
+                        }
+                        else if vector.count == 4 {
+                            if let top = vector[0] as? Double, let left = vector[1] as? Double, let bottom = vector[2] as? Double, let right = vector[3] as? Double {
+                                return NSExpression(
+                                    forConstantValue:  UIEdgeInsets(top:  top, left:left, bottom:bottom, right:right)
                                 )
                             }
                         }
