@@ -98,6 +98,8 @@ abstract class MapboxGlPlatform {
 
   Future<Point> toScreenLocation(LatLng latLng);
 
+  Future<void> setLayerVisibility(String layerId, bool visible);
+
   Future<List<Point>> toScreenLocationBatch(Iterable<LatLng> latLngs);
 
   Future<LatLng> toLatLng(Point screenLocation);
