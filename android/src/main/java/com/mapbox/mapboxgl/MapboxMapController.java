@@ -1435,7 +1435,13 @@ final class MapboxMapController
 
         Layer layer = style.getLayer(layerId);
 
-        layer.setProperties(new PropertyValue('visibility', visible));
+        layer.setProperties(new PropertyValue("visibility", visible ? "visible" : "none"));
+      }
+      case "layer#getLayerVisibility": {
+        String layerId = call.argument("layerId");
+
+        Layer layer = style.getLayer(layerId);
+        result.success(layer.getVisibility().value.equals("visible"));
       }
       default:
         result.notImplemented();

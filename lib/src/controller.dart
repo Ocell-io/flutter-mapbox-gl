@@ -371,6 +371,11 @@ class MapboxMapController extends ChangeNotifier {
     await _mapboxGlPlatform.setLayerVisibility(layerId, visible);
   }
 
+  /// Returns if layer with identifier [layerId] is visible or not
+  Future<bool?> getLayerVisibility(String layerId) async {
+    return await _mapboxGlPlatform.getLayerVisibility(layerId);
+  }
+
   /// Add a symbol layer to the map with the given properties
   ///
   /// Consider using [addLayer] for an unified layer api.
