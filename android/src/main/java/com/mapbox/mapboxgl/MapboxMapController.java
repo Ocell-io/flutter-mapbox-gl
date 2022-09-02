@@ -1402,6 +1402,14 @@ final class MapboxMapController
               });
           break;
         }
+      case "layer#setLayerVisibility": {
+        String layerId = call.argument("layerId");
+        boolean visible = call.argument("visible");
+
+        Layer layer = style.getLayer(layerId);
+
+        layer.setProperties(new PropertyValue('visibility', visible));
+      }
       default:
         result.notImplemented();
     }
