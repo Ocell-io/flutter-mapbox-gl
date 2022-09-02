@@ -961,4 +961,10 @@ class MapboxWebGlPlatform extends MapboxGlPlatform
   void forceResizeWebMap() {
     _map.resize();
   }
+
+  @override
+  Future<void> setLayerVisibility(String layerId, bool visibility) async {
+    _map.setLayoutProperty(
+        layerId, "visibility", visibility ? "visible" : "none");
+  }
 }

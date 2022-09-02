@@ -684,4 +684,10 @@ class MethodChannelMapboxGl extends MapboxGlPlatform {
 
   @override
   void resizeWebMap() {}
+
+  @override
+  Future<void> setLayerVisibility(String layerId, bool visible) async {
+    await _channel.invokeMethod('layer#setLayerVisibility',
+        <String, dynamic>{'layerId': layerId, 'visible': visible});
+  }
 }
