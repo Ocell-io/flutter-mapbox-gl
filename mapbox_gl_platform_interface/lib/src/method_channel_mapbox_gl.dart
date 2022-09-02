@@ -690,4 +690,10 @@ class MethodChannelMapboxGl extends MapboxGlPlatform {
     await _channel.invokeMethod('layer#setLayerVisibility',
         <String, dynamic>{'layerId': layerId, 'visible': visible});
   }
+
+  @override
+  Future<bool?> getLayerVisibility(String layerId) async {
+    return await _channel.invokeMethod(
+        'layer#getLayerVisibility', <String, dynamic>{'layerId': layerId});
+  }
 }
