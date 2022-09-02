@@ -344,6 +344,13 @@ class MapboxMapController extends ChangeNotifier {
         sourceId, geojsonFeature);
   }
 
+  /// Changes visibility of a layer
+  ///
+  /// Sets the visiblity of the specified layer to [visible]
+  Future<void> setLayerVisibility(String layerId, bool visible) async {
+    await _mapboxGlPlatform.setLayerVisibility(layerId, visible);
+  }
+
   /// Add a symbol layer to the map with the given properties
   ///
   /// Consider using [addLayer] for an unified layer api.
