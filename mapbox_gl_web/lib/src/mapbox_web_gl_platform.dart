@@ -1064,6 +1064,7 @@ class MapboxWebGlPlatform extends MapboxGlPlatform
   @override
   Future<bool?> getLayerVisibility(String layerId) async {
     final result = _map.getLayoutProperty(layerId, 'visibility');
+    if(result == null) return true;
     if (result is String) return result == "visible";
     return false;
   }
