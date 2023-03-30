@@ -13,7 +13,7 @@ class WrappedPlatformViewsService {
     MessageCodec<dynamic>? creationParamsCodec,
     VoidCallback? onFocus,
   }) {
-    final view = PlatformViewsService.initAndroidView(
+    final view = PlatformViewsService.initSurfaceAndroidView(
       id: id,
       viewType: viewType,
       layoutDirection: layoutDirection,
@@ -21,8 +21,7 @@ class WrappedPlatformViewsService {
       creationParamsCodec: creationParamsCodec,
       onFocus: onFocus,
     );
-    return TextureAndroidViewControllerWrapper(
-        view as TextureAndroidViewController);
+    return TextureAndroidViewControllerWrapper(view);
   }
 }
 
@@ -30,7 +29,7 @@ class TextureAndroidViewControllerWrapper
     implements TextureAndroidViewController {
   TextureAndroidViewControllerWrapper(this._controller);
 
-  final TextureAndroidViewController _controller;
+  final AndroidViewController _controller;
 
   // @override
   PointTransformer get pointTransformer => _controller.pointTransformer;
