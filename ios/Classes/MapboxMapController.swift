@@ -892,6 +892,28 @@ class MapboxMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, Ma
                     result(value.absoluteString)
                 }
             }
+            
+        case "layer#setLayerVisibility":
+            guard let arguments = methodCall.arguments as? [String: Any] else { return }
+            guard let layerId = arguments["layerId"] as? String else { return }
+            guard let visible = arguments["visible"] as? Bool else { return }
+            let layer = mapView.style?.layer(withIdentifier: layerId)
+            if layer != nil {
+                layer!.isVisible = visible
+            }
+            
+            result(nil)
+
+        case "layer#getLayerVisibility":
+            guard let arguments = methodCall.arguments as? [String: Any] else { return }
+            guard let layerId = arguments["layerId"] as? String else { return }
+            let layer = mapView.style?.layer(withIdentifier: layerId)
+            if layer != nil {
+                result(layer!.isVisible)
+            }
+            
+            result(nil)
+            
         default:
             result(FlutterMethodNotImplemented)
         }
