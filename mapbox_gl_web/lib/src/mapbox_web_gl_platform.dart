@@ -180,25 +180,13 @@ class MapboxWebGlPlatform extends MapboxGlPlatform
   }
 
   @override
-  Future<bool?> animateCamera(CameraUpdate cameraUpdate,
-      {Duration? duration}) async {
+  Future<bool?> animateCamera(
+    CameraUpdate cameraUpdate, {
+    Duration? duration,
+  }) async {
     final cameraOptions = Convert.toCameraOptions(cameraUpdate, _map);
 
-    final around = getProperty(cameraOptions, 'around');
-    final bearing = getProperty(cameraOptions, 'bearing');
-    final center = getProperty(cameraOptions, 'center');
-    final pitch = getProperty(cameraOptions, 'pitch');
-    final zoom = getProperty(cameraOptions, 'zoom');
-
-    _map.flyTo({
-      if (around.jsObject != null) 'around': around,
-      if (bearing != null) 'bearing': bearing,
-      if (center.jsObject != null) 'center': center,
-      if (pitch != null) 'pitch': pitch,
-      if (zoom != null) 'zoom': zoom,
-      if (duration != null) 'duration': duration.inMilliseconds,
-    });
-
+    _map.flyTo(cameraOptions);
     return true;
   }
 
@@ -1045,7 +1033,7 @@ class MapboxWebGlPlatform extends MapboxGlPlatform
   @override
   Future<bool?> getLayerVisibility(String layerId) async {
     final result = _map.getLayoutProperty(layerId, 'visibility');
-    if(result == null) return true;
+    if (result == null) return true;
     if (result is String) return result == "visible";
     return false;
   }
