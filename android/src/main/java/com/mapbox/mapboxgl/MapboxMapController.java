@@ -74,6 +74,7 @@ import com.mapbox.mapboxsdk.style.layers.RasterLayer;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.mapboxsdk.style.sources.ImageSource;
+import com.mapbox.mapboxsdk.style.sources.Source;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -357,7 +358,15 @@ final class MapboxMapController
     GeoJsonSource geoJsonSource = new GeoJsonSource(sourceName, featureCollection);
     addedFeaturesByLayer.put(sourceName, featureCollection);
 
-    style.addSource(geoJsonSource);
+    List<String> sourceIDList = new ArrayList<>();
+    final List<Source> allSources = style.getSources();
+    for (Source item : allSources) {
+      sourceIDList.add(item.getId());
+    }
+    if (!sourceIDList.contains(sourceName)) {
+      // Only add the source if it doesn't already exist, otherwise it will crash
+      style.addSource(geoJsonSource);
+    }
   }
 
   private void setGeoJsonSource(String sourceName, String geojson) {
