@@ -13,7 +13,7 @@ class WrappedPlatformViewsService {
     MessageCodec<dynamic>? creationParamsCodec,
     VoidCallback? onFocus,
   }) {
-    final view = PlatformViewsService.initSurfaceAndroidView(
+    final view = PlatformViewsService.initExpensiveAndroidView(
       id: id,
       viewType: viewType,
       layoutDirection: layoutDirection,
