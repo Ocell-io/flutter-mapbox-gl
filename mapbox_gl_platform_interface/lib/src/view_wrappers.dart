@@ -59,8 +59,8 @@ class TextureAndroidViewControllerWrapper
   /// the platform view.
   Future<void> create({Size? size, Offset? position}) async {
     if (awaitingCreation) {
-      await _controller.create();
       awaitingCreation = false;
+      await _controller.create();
       if (size != null) {
         await _controller.setSize(size);
         if (position != null) {
