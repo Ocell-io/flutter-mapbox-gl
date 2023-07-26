@@ -329,7 +329,9 @@ class MapboxWebGlPlatform extends MapboxGlPlatform
 
   @override
   Future<void> removeSource(String sourceId) async {
-    _map.removeSource(sourceId);
+    if (_map.getSource(sourceId) != null) {
+      _map.removeSource(sourceId);
+    }
   }
 
   CameraPosition? _getCameraPosition() {
