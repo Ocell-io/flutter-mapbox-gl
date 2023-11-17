@@ -258,7 +258,7 @@ class FullMapState extends State<FullMap> {
     );
   }
 
-  static const _stylesAndLoaders = [
+  static final _stylesAndLoaders = [
     StyleInfo(
       name: "Vector",
       baseStyle: MapboxStyles.LIGHT,

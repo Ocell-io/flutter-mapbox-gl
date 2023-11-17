@@ -5,6 +5,7 @@
 package com.mapbox.mapboxgl;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.Gravity;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLngBounds;
@@ -15,7 +16,9 @@ import io.flutter.plugin.common.BinaryMessenger;
 class MapboxMapBuilder implements MapboxMapOptionsSink {
   public final String TAG = getClass().getSimpleName();
   private final MapboxMapOptions options =
-      new MapboxMapOptions().textureMode(true).attributionEnabled(true);
+      new MapboxMapOptions().textureMode(true) // We have to use this mode because otherwise, the MapboxGLSurfaceView would be used which promises faster rendering but in the combination with flutter it leads to several issues like grey screen on screen rotate etc.
+      .translucentTextureSurface(false).attributionEnabled(false).logoEnabled(false).debugActive(false).crossSourceCollisions(false).setPrefetchesTiles(true).foregroundLoadColor(Color.WHITE);
+
   private boolean trackCameraPosition = false;
   private boolean myLocationEnabled = false;
   private boolean dragEnabled = true;

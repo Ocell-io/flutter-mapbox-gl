@@ -2,7 +2,6 @@ part of mapbox_gl_platform_interface;
 
 class MethodChannelMapboxGl extends MapboxGlPlatform {
   late MethodChannel _channel;
-  static bool useHybridComposition = false;
 
   Future<dynamic> _handleMethodCall(MethodCall call) async {
     switch (call.method) {
@@ -140,87 +139,14 @@ class MethodChannelMapboxGl extends MapboxGlPlatform {
       Map<String, dynamic> creationParams,
       OnPlatformViewCreatedCallback onPlatformViewCreated,
       Set<Factory<OneSequenceGestureRecognizer>>? gestureRecognizers) {
-    if (defaultTargetPlatform == TargetPlatform.android) {
-      final useDelayedDisposalParam =
-          (creationParams['useDelayedDisposal'] ?? false) as bool;
-      final useHybridCompositionParam =
-          (creationParams['useHybridCompositionOverride'] ??
-              useHybridComposition) as bool;
-      if (useHybridCompositionParam) {
-        return PlatformViewLink(
-          viewType: 'plugins.flutter.io/mapbox_gl',
-          surfaceFactory: (
-            BuildContext context,
-            PlatformViewController controller,
-          ) {
-            return AndroidViewSurface(
-              controller: controller as AndroidViewController,
-              gestureRecognizers: gestureRecognizers ??
-                  const <Factory<OneSequenceGestureRecognizer>>{},
-              hitTestBehavior: PlatformViewHitTestBehavior.opaque,
-            );
-          },
-          onCreatePlatformView: (PlatformViewCreationParams params) {
-            late AndroidViewController controller;
-            if (useDelayedDisposalParam) {
-              controller = WrappedPlatformViewsService.initAndroidView(
-                id: params.id,
-                viewType: 'plugins.flutter.io/mapbox_gl',
-                layoutDirection: TextDirection.ltr,
-                creationParams: creationParams,
-                creationParamsCodec: const StandardMessageCodec(),
-                onFocus: () => params.onFocusChanged(true),
-              );
-            } else {
-              controller = PlatformViewsService.initAndroidView(
-                id: params.id,
-                viewType: 'plugins.flutter.io/mapbox_gl',
-                layoutDirection: TextDirection.ltr,
-                creationParams: creationParams,
-                creationParamsCodec: const StandardMessageCodec(),
-                onFocus: () => params.onFocusChanged(true),
-              );
-            }
-            controller.addOnPlatformViewCreatedListener(
-              params.onPlatformViewCreated,
-            );
-            controller.addOnPlatformViewCreatedListener(
-              onPlatformViewCreated,
-            );
-
-            controller.create();
-            return controller;
-          },
-        );
-      } else {
-        if (useDelayedDisposalParam) {
-          return AndroidViewWithWrappedController(
-            viewType: 'plugins.flutter.io/mapbox_gl',
-            onPlatformViewCreated: onPlatformViewCreated,
-            gestureRecognizers: gestureRecognizers,
-            creationParams: creationParams,
-            creationParamsCodec: const StandardMessageCodec(),
-          );
-        }
-        return AndroidView(
-          viewType: 'plugins.flutter.io/mapbox_gl',
-          onPlatformViewCreated: onPlatformViewCreated,
-          gestureRecognizers: gestureRecognizers,
-          creationParams: creationParams,
-          creationParamsCodec: const StandardMessageCodec(),
-        );
-      }
-    } else if (defaultTargetPlatform == TargetPlatform.iOS) {
-      return UiKitView(
-        viewType: 'plugins.flutter.io/mapbox_gl',
-        onPlatformViewCreated: onPlatformViewCreated,
-        gestureRecognizers: gestureRecognizers,
-        creationParams: creationParams,
-        creationParamsCodec: const StandardMessageCodec(),
-      );
-    }
-    return Text(
-        '$defaultTargetPlatform is not yet supported by the maps plugin');
+    
+    return AndroidView(
+      viewType: 'plugins.flutter.io/mapbox_gl',
+      onPlatformViewCreated: onPlatformViewCreated,
+      gestureRecognizers: gestureRecognizers,
+      creationParams: creationParams,
+      creationParamsCodec: const StandardMessageCodec(),
+    );
   }
 
   @override

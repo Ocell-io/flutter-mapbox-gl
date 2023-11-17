@@ -1620,6 +1620,11 @@ final class MapboxMapController
       return;
     }
     mapView.onResume();
+    if(mapboxMap != null) {
+      // This is required to prevent an issue that the map would be just grey onResume (app was minimized to the background and then reopened again)
+      // Basically we just need to trigger a repaint but for some reasons mapboxMap.triggerRepaint(); doesn't do the job
+      mapboxMap.resetNorth();
+    }
     if (myLocationEnabled) {
       startListeningForLocationUpdates();
     }
