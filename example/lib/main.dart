@@ -73,6 +73,22 @@ class _MapsDemoState extends State<MapsDemo> {
     super.initState();
   }
 
+  /// Determine the android version of the phone and turn off HybridComposition
+  /// on older sdk versions to improve performance for these
+  ///
+  /// !!! Hybrid composition is currently broken do no use !!!
+  Future<void> initHybridComposition() async {
+    if (!kIsWeb && Platform.isAndroid) {
+      final androidInfo = await DeviceInfoPlugin().androidInfo;
+      final sdkVersion = androidInfo.version.sdkInt;
+      if (sdkVersion != null && sdkVersion >= 29) {
+        MapboxMap.useHybridComposition = true;
+      } else {
+        MapboxMap.useHybridComposition = false;
+      }
+    }
+  }
+
   void _pushPage(BuildContext context, ExamplePage page) async {
     if (!kIsWeb) {
       final location = Location();

@@ -5,17 +5,15 @@ packages:
     dependency: "direct main"
     description:
       name: mustache_template
-      sha256: a46e26f91445bfb0b60519be280555b06792460b27b19e2b19ad5b9740df5d1c
-      url: "https://pub.dev"
+      url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
   recase:
     dependency: "direct main"
     description:
       name: recase
-      sha256: "7aec9b9f498cba65ed969eda51ea3d86a77bbd633d876b57d9db7d9f94fc6ca5"
-      url: "https://pub.dev"
+      url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.0"
 sdks:
-  dart: ">=2.12.0 <4.0.0"
+  dart: ">=2.12.0 <3.0.0"

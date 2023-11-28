@@ -1022,7 +1022,7 @@ class MapboxWebGlPlatform extends MapboxGlPlatform
         snapshotOptions.heading != 0) {
       throw UnsupportedError("camera posision option is not supported");
     }
-    final base64String = _map.getCanvas().toDataUrl('image/jpeg');
+    final base64String = await _map.getCanvas().toDataUrl('image/jpeg');
     return base64String;
   }
 
