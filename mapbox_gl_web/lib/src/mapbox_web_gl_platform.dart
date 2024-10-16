@@ -325,8 +325,11 @@ class MapboxWebGlPlatform extends MapboxGlPlatform
   @override
   Future<void> addImage(String name, Uint8List bytes,
       [bool sdf = false]) async {
-    final photo = decodeImage(bytes)!;
     if (!_map.hasImage(name)) {
+      var photo = decodeImage(bytes)!;
+      // This conversion is required after the update from 3.x to 4.x of the image package due to some internal changes. Otherwise the transparent PNGs will have an invalid encoding.
+      photo = photo.convert(numChannels: 4);
+
       _map.addImage(
         name,
         {
