@@ -61,6 +61,9 @@ abstract class MapboxGlPlatform {
   void resizeWebMap();
   void forceResizeWebMap();
 
+  Future<Size> setWebMapToCustomSize(Size size);
+  Future<void> waitUntilMapTilesAreLoaded();
+  Future<void> waitUntilMapIsIdleAfterMovement();
   Future<void> updateContentInsets(EdgeInsets insets, bool animated);
   Future<void> setMapLanguage(String language);
   Future<void> setTelemetryEnabled(bool enabled);

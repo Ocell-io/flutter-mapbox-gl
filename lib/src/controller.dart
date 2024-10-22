@@ -272,6 +272,25 @@ class MapboxMapController extends ChangeNotifier {
     _mapboxGlPlatform.forceResizeWebMap();
   }
 
+  /// Can be used to set the size of the map container to custom values. E.g. when a screenshot for a specific aspect ratio is needed.
+  /// IMPORTANT: It's important to resize the map back to the original size after the operation is done.
+  /// Returns the original size of the map container which can be stored and used to resize the map back to the original size afterwards.
+  /// This function waits for the map to be idle before returning the original size. So it's safe to assume the map has been resized/rerendered when the future completes.
+  Future<Size> setWebMapToCustomSize(Size size) {
+    return _mapboxGlPlatform.setWebMapToCustomSize(size);
+  }
+
+  /// Waits until the tiles of the map have been loaded. This is useful if you need to know when all tiles are there. E.g. when taking a screenshot.
+  Future<void> waitUntilMapTilesAreLoaded() {
+    return _mapboxGlPlatform.waitUntilMapTilesAreLoaded();
+  }
+
+  /// Waits until the map is idle.
+  /// IMPORTANT: Only call this function after there was a movement change etc. Otherwise it will wait forever because the map is already idle.
+  Future<void> waitUntilMapIsIdleAfterMovement() {
+    return _mapboxGlPlatform.waitUntilMapIsIdleAfterMovement();
+  }
+
   /// Starts an animated change of the map camera position.
   ///
   /// [duration] is the amount of time, that the transition animation should take.
