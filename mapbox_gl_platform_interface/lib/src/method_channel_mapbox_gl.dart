@@ -756,6 +756,21 @@ class MethodChannelMapboxGl extends MapboxGlPlatform {
   }
 
   @override
+  Future<Size> setWebMapToCustomSize(Size size) {
+    return Future.value(Size(-1, -1));
+  }
+
+  @override
+  Future<void> waitUntilMapTilesAreLoaded() {
+    return Future.value(false);
+  }
+
+  @override
+  Future<void> waitUntilMapIsIdleAfterMovement() {
+    return Future.value(false);
+  }
+
+  @override
   void forceResizeWebMap() {}
 
   @override

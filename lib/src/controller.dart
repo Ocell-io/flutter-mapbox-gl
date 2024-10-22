@@ -282,6 +282,26 @@ class MapboxMapController extends ChangeNotifier {
         'This MapboxMapController has already been disposed. This happens if flutter disposes a MapboxMap and you try to use its Controller afterwards.',
       );
     }
+  /// Can be used to set the size of the map container to custom values. E.g. when a screenshot for a specific aspect ratio is needed.
+  /// IMPORTANT: It's important to resize the map back to the original size after the operation is done.
+  /// Returns the original size of the map container which can be stored and used to resize the map back to the original size afterwards.
+  /// This function waits for the map to be idle before returning the original size. So it's safe to assume the map has been resized/rerendered when the future completes.
+  Future<Size> setWebMapToCustomSize(Size size) {
+    _disposeGuard();
+    return _mapboxGlPlatform.setWebMapToCustomSize(size);
+  }
+
+  /// Waits until the tiles of the map have been loaded. This is useful if you need to know when all tiles are there. E.g. when taking a screenshot.
+  Future<void> waitUntilMapTilesAreLoaded() {
+    _disposeGuard();
+    return _mapboxGlPlatform.waitUntilMapTilesAreLoaded();
+  }
+
+  /// Waits until the map is idle.
+  /// IMPORTANT: Only call this function after there was a movement change etc. Otherwise it will wait forever because the map is already idle.
+  Future<void> waitUntilMapIsIdleAfterMovement() {
+    _disposeGuard();
+    return _mapboxGlPlatform.waitUntilMapIsIdleAfterMovement();
   }
 
   /// Starts an animated change of the map camera position.

@@ -1049,6 +1049,41 @@ class MapboxWebGlPlatform extends MapboxGlPlatform
   }
 
   @override
+  Future<void> waitUntilMapIsIdleAfterMovement() async {
+    final complete = Completer<void>();
+    _map.once('idle', (_) => complete.complete());
+    return complete.future;
+  }
+
+  @override
+  Future<Size> setWebMapToCustomSize(Size size) async {
+    final initialSize = Size(
+      _map.getContainer().clientWidth.toDouble(),
+      _map.getContainer().clientHeight.toDouble(),
+    );
+
+    _map.getContainer().style.width = size.width.toString() + 'px';
+    _map.getContainer().style.height = size.height.toString() + 'px';
+    _map.resize();
+
+    await waitUntilMapIsIdleAfterMovement();
+    return initialSize;
+  }
+
+  @override
+  Future<void> waitUntilMapTilesAreLoaded() async {
+    final tilesLoadedCompleter = Completer<void>();
+    if (_map.areTilesLoaded()) {
+      tilesLoadedCompleter.complete();
+    } else {
+      _map.once('sourcedata', (_) {
+        tilesLoadedCompleter.complete();
+      });
+    }
+    await tilesLoadedCompleter.future;
+  }
+
+  @override
   void resizeWebMap() {
     _onMapResize();
   }
