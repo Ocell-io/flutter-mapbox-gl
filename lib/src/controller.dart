@@ -284,6 +284,11 @@ class MapboxMapController extends ChangeNotifier {
     }
   }
 
+  Future<void> setLayerInteraction(String layerId, bool enable) async {
+    _disposeGuard();
+    return _mapboxGlPlatform.setLayerInteraction(layerId, enable);
+  }
+
   /// Can be used to set the size of the map container to custom values. E.g. when a screenshot for a specific aspect ratio is needed.
   /// IMPORTANT: It's important to resize the map back to the original size after the operation is done.
   /// Returns the original size of the map container which can be stored and used to resize the map back to the original size afterwards.

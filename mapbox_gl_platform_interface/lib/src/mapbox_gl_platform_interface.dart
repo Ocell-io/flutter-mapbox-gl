@@ -68,6 +68,8 @@ abstract class MapboxGlPlatform {
   Future<void> setMapLanguage(String language);
   Future<void> setTelemetryEnabled(bool enabled);
 
+  Future<void> setLayerInteraction(String layerId, bool enable);
+
   Future<bool> getTelemetryEnabled();
   Future<List> queryRenderedFeatures(
       Point<double> point, List<String> layerIds, List<Object>? filter);

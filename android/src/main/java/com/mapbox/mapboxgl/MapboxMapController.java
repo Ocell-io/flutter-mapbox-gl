@@ -1449,6 +1449,16 @@ final class MapboxMapController
         }
         break;
       }
+      case "layer#setLayerInteraction":{
+        String layerId = call.argument("layerId");
+        boolean enable = call.argument("enable");
+
+        if (enable) {
+          interactiveFeatureLayerIds.add(layerId);
+        } else {
+          interactiveFeatureLayerIds.remove(layerId);
+        }
+      }
       default:
         result.notImplemented();
     }

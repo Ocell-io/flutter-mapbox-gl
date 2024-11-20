@@ -7,6 +7,8 @@ class MapboxWebGlPlatform extends MapboxGlPlatform
     implements MapboxMapOptionsSink {
   late DivElement _mapElement;
 
+  final _layerIdToTypeLookup = <String, String>{};
+
   late Map<String, dynamic> _creationParams;
   late MapboxMap _map;
   bool _mapReady = false;
@@ -911,6 +913,30 @@ class MapboxWebGlPlatform extends MapboxGlPlatform
     }
   }
 
+  Future<void> setLayerInteraction(String layerId, bool enable) async {
+    final layerType = _layerIdToTypeLookup[layerId];
+
+    if (layerType != null && _map.getLayer(layerId) != null) {
+      final wasEnabled = _interactiveFeatureLayerIds.contains(layerId);
+      if (wasEnabled == enable) return;
+      if (enable) {
+        _interactiveFeatureLayerIds.add(layerId);
+        if (layerType == "fill") {
+          _map.on('mousemove', layerId, _onMouseEnterFeature);
+        } else {
+          _map.on('mouseenter', layerId, _onMouseEnterFeature);
+        }
+        _map.on('mouseleave', layerId, _onMouseLeaveFeature);
+        if (_dragEnabled) _map.on('mousedown', layerId, _onMouseDown);
+      } else {
+        _interactiveFeatureLayerIds.remove(layerId);
+        _map.off('mouseenter', layerId, _onMouseEnterFeature);
+        _map.off('mouseleave', layerId, _onMouseLeaveFeature);
+        _map.off('mousedown', layerId, _onMouseDown);
+      }
+    }
+  }
+
   void _onMouseEnterFeature(_) {
     if (_draggedFeatureId == null) {
       _map.getCanvas().style.cursor = 'pointer';
@@ -1104,7 +1130,7 @@ class MapboxWebGlPlatform extends MapboxGlPlatform
   @override
   Future<bool?> getLayerVisibility(String layerId) async {
     final result = _map.getLayoutProperty(layerId, 'visibility');
-    if(result == null) return true;
+    if (result == null) return true;
     if (result is String) return result == "visible";
     return false;
   }

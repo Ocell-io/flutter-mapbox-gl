@@ -788,6 +788,7 @@ class MapboxMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, Ma
             setSource(sourceId: sourceId, geojson: geojson)
             result(nil)
 
+
         case "source#setFeature":
             guard let arguments = methodCall.arguments as? [String: Any] else { return }
             guard let sourceId = arguments["sourceId"] as? String else { return }
@@ -930,6 +931,13 @@ class MapboxMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, Ma
             
             result(nil)
             
+        case "layer#SetLayerInteraction":
+            guard let arguments = methodCall.arguments as? [String: Any] else { return }
+            guard let layerId = arguments["layerId"] as? String else { return }
+            guard let enableInteraction = arguments["enableInteraction"] as? Bool else { return }
+            setLayerInteraction(layerId: layerId, enableInteraction: enableInteraction)
+            result(nil)
+
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -1640,6 +1648,16 @@ class MapboxMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, Ma
                 source.shape = parsed
             }
         } catch {}
+    }
+
+    func setLayerInteraction(layerId: String, enable: Bool) {
+        if let layer = mapView.style?.layer(withIdentifier: layerId) {
+            if enable {
+                interactiveFeatureLayerIds.insert(layerId)
+            } else {
+                interactiveFeatureLayerIds.remove(layerId)
+            }
+        }
     }
 
     func setFeature(sourceId: String, geojsonFeature: String) {
