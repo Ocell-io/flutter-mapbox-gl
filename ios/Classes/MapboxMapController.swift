@@ -931,11 +931,11 @@ class MapboxMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, Ma
             
             result(nil)
             
-        case "layer#SetLayerInteraction":
+        case "layer#setLayerInteraction":
             guard let arguments = methodCall.arguments as? [String: Any] else { return }
             guard let layerId = arguments["layerId"] as? String else { return }
-            guard let enableInteraction = arguments["enableInteraction"] as? Bool else { return }
-            setLayerInteraction(layerId: layerId, enableInteraction: enableInteraction)
+            guard let enableInteraction = arguments["enable"] as? Bool else { return }
+            setLayerInteraction(layerId: layerId, enable: enableInteraction)
             result(nil)
 
         default:
