@@ -1535,6 +1535,11 @@ class MapboxMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, Ma
     }
 
     func addSource(sourceId: String, properties: [String: Any]) {
+        if mapView.style?.source(withIdentifier: sourceId) != nil {
+            // The source already exists, so no need to add it again.
+            return
+        }
+
         if let style = mapView.style, let type = properties["type"] as? String {
             var source: MGLSource?
 
@@ -1605,6 +1610,11 @@ class MapboxMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, Ma
     }
 
     func addSourceGeojson(sourceId: String, geojson: String) {
+        if mapView.style?.source(withIdentifier: sourceId) != nil {
+            // The source already exists, so no need to add it again.
+            return
+        }
+
         do {
             let parsed = try MGLShape(
                 data: geojson.data(using: .utf8)!,
