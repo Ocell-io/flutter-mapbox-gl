@@ -1215,6 +1215,11 @@ class MapboxMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, Ma
     ) -> Result<Void, MethodCallError> {
         if let style = mapView.style {
             if let source = style.source(withIdentifier: sourceId) {
+                if style.layer(withIdentifier: layerId) != nil {
+                    // The layer already exists, so no need to add it again.
+                    return .success(())
+                }
+                
                 let layer = MGLSymbolStyleLayer(identifier: layerId, source: source)
                 LayerPropertyConverter.addSymbolProperties(
                     symbolLayer: layer,
@@ -1260,6 +1265,11 @@ class MapboxMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, Ma
     ) -> Result<Void, MethodCallError> {
         if let style = mapView.style {
             if let source = style.source(withIdentifier: sourceId) {
+                if style.layer(withIdentifier: layerId) != nil {
+                    // The layer already exists, so no need to add it again.
+                    return .success(())
+                }
+                
                 let layer = MGLLineStyleLayer(identifier: layerId, source: source)
                 LayerPropertyConverter.addLineProperties(lineLayer: layer, properties: properties)
                 if let sourceLayerIdentifier = sourceLayerIdentifier {
@@ -1302,6 +1312,11 @@ class MapboxMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, Ma
     ) -> Result<Void, MethodCallError> {
         if let style = mapView.style {
             if let source = style.source(withIdentifier: sourceId) {
+                if style.layer(withIdentifier: layerId) != nil {
+                    // The layer already exists, so no need to add it again.
+                    return .success(())
+                }
+                
                 let layer = MGLFillStyleLayer(identifier: layerId, source: source)
                 LayerPropertyConverter.addFillProperties(fillLayer: layer, properties: properties)
                 if let sourceLayerIdentifier = sourceLayerIdentifier {
@@ -1344,6 +1359,11 @@ class MapboxMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, Ma
     ) -> Result<Void, MethodCallError> {
         if let style = mapView.style {
             if let source = style.source(withIdentifier: sourceId) {
+                if style.layer(withIdentifier: layerId) != nil {
+                    // The layer already exists, so no need to add it again.
+                    return .success(())
+                }
+                
                 let layer = MGLFillExtrusionStyleLayer(identifier: layerId, source: source)
                 LayerPropertyConverter.addFillExtrusionProperties(
                     fillExtrusionLayer: layer,
@@ -1389,6 +1409,11 @@ class MapboxMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, Ma
     ) -> Result<Void, MethodCallError> {
         if let style = mapView.style {
             if let source = style.source(withIdentifier: sourceId) {
+                if style.layer(withIdentifier: layerId) != nil {
+                    // The layer already exists, so no need to add it again.
+                    return .success(())
+                }
+                
                 let layer = MGLCircleStyleLayer(identifier: layerId, source: source)
                 LayerPropertyConverter.addCircleProperties(
                     circleLayer: layer,
@@ -1454,6 +1479,11 @@ class MapboxMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, Ma
     ) {
         if let style = mapView.style {
             if let source = style.source(withIdentifier: sourceId) {
+                if style.layer(withIdentifier: layerId) != nil {
+                    // The layer already exists, so no need to add it again.
+                    return
+                }
+                
                 let layer = MGLHillshadeStyleLayer(identifier: layerId, source: source)
                 LayerPropertyConverter.addHillshadeProperties(
                     hillshadeLayer: layer,
@@ -1484,6 +1514,11 @@ class MapboxMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, Ma
     ) {
         if let style = mapView.style {
             if let source = style.source(withIdentifier: sourceId) {
+                if style.layer(withIdentifier: layerId) != nil {
+                    // The layer already exists, so no need to add it again.
+                    return
+                }
+                
                 let layer = MGLHeatmapStyleLayer(identifier: layerId, source: source)
                 LayerPropertyConverter.addHeatmapProperties(
                     heatmapLayer: layer,
@@ -1514,6 +1549,11 @@ class MapboxMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, Ma
     ) {
         if let style = mapView.style {
             if let source = style.source(withIdentifier: sourceId) {
+                if style.layer(withIdentifier: layerId) != nil {
+                    // The layer already exists, so no need to add it again.
+                    return
+                }
+                
                 let layer = MGLRasterStyleLayer(identifier: layerId, source: source)
                 LayerPropertyConverter.addRasterProperties(
                     rasterLayer: layer,
