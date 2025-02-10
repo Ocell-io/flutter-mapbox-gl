@@ -2,9 +2,9 @@ part of mapbox_gl;
 
 extension MapBoxColorConversion on Color {
   String toHexStringRGB() {
-    final r = red.toRadixString(16).padLeft(2, '0');
-    final g = green.toRadixString(16).padLeft(2, '0');
-    final b = blue.toRadixString(16).padLeft(2, '0');
-    return '#$r$g$b';
+    final red = (r * 255).toInt().toRadixString(16).padLeft(2, '0');
+    final green = (g * 255).toInt().toRadixString(16).padLeft(2, '0');
+    final blue = (b * 255).toInt().toRadixString(16).padLeft(2, '0');
+    return '#$red$green$blue';
   }
 }
